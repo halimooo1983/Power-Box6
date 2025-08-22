@@ -59,13 +59,6 @@ const socialPlatforms = [
     placeholder: "https://instagram.com/yourhandle",
   },
   {
-    key: "linkedin",
-    label: "LinkedIn",
-    icon: Linkedin,
-    color: "text-blue-700",
-    placeholder: "https://linkedin.com/company/yourcompany",
-  },
-  {
     key: "youtube",
     label: "YouTube",
     icon: Youtube,
