@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NavLink, Outlet } from "react-router-dom";
+import { AdminGuard } from "./AdminGuard";
 import {
   LayoutDashboard,
   Megaphone,
