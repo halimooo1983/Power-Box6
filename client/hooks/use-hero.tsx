@@ -89,32 +89,16 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     setHeroData((prev) => ({ ...prev, ...newData }));
   };
 
+  // Real-time sync for updates from admin panel
+  useRealTimeSync("hero_section", (payload) => {
+    if (payload.new && payload.new.content) {
+      console.log("Real-time hero update received:", payload.new.content);
+      setHeroData({ ...defaultHeroData, ...payload.new.content });
+    }
+  });
+
   useEffect(() => {
     loadHeroData();
-
-    // Set up real-time subscription
-    const channel = supabase
-      .channel("hero_section_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "hero_section",
-        },
-        (payload) => {
-          console.log("Hero section updated:", payload);
-          if (payload.new && payload.new.content) {
-            setHeroData({ ...defaultHeroData, ...payload.new.content });
-          }
-        },
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   return (
