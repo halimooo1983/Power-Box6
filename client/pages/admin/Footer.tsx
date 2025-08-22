@@ -21,7 +21,6 @@ interface FooterData {
     facebook: string;
     twitter: string;
     instagram: string;
-    linkedin: string;
     youtube: string;
     tiktok: string;
   };
@@ -32,7 +31,6 @@ const defaultFooterData: FooterData = {
     facebook: "",
     twitter: "",
     instagram: "",
-    linkedin: "",
     youtube: "",
     tiktok: "",
   },
