@@ -8,46 +8,48 @@ import { Badge } from "@/components/ui/badge";
 import { Save, Plus, Trash2, Link as LinkIcon, Upload, Image as ImageIcon, X } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
+interface TrustElement {
+  icon: string;
+  text: string;
+}
+
 interface OfferPricingData {
-  promo_text: string;
   title: string;
   subtitle: string;
-  offer_card: {
-    product_name: string;
-    old_price: string;
-    new_price: string;
-    features: string[];
-    button: {
-      label: string;
-      popup_link: string;
-      popup_title: string;
-    };
-    guarantees: string[];
-  };
+  sale_price: number;
+  benefits: string[];
+  cta_text: string;
+  trust_elements: TrustElement[];
+  offer_image?: string; // New field for offer image
 }
 
 const defaultOfferPricingData: OfferPricingData = {
-  promo_text: "Bestseller - Limited Time Offer",
   title: "Ready to Fuel Your Day?",
   subtitle: "Get your 42-count nutritious snack box today!",
-  offer_card: {
-    product_name: "Nutritious Snack Box",
-    old_price: "$42.99",
-    new_price: "$31.95",
-    features: [
-      "42 premium snacks included",
-      "Fresh & high-quality snacks from top brands",
-      "Perfect for gifting or office sharing",
-      "Fast & reliable delivery nationwide",
-      "Greeting card included",
-    ],
-    button: {
-      label: "Get Your Snack Box Now",
-      popup_link: "",
-      popup_title: "",
+  sale_price: 31.95,
+  benefits: [
+    "42 premium snacks included",
+    "Fresh & high-quality snacks from top brands",
+    "Perfect for gifting or office sharing",
+    "Fast & reliable delivery nationwide",
+    "Greeting card included",
+  ],
+  cta_text: "Get Your Snack Box Now",
+  trust_elements: [
+    {
+      icon: "Shield",
+      text: "Secure Payment",
     },
-    guarantees: ["Secure Payment", "Fast Shipping", "Satisfaction Guaranteed"],
-  },
+    {
+      icon: "Truck",
+      text: "Fast Shipping",
+    },
+    {
+      icon: "BadgeCheck",
+      text: "Satisfaction Guaranteed",
+    },
+  ],
+  offer_image: "",
 };
 
 export default function OfferPricing() {
