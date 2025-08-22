@@ -79,40 +79,29 @@ export default function WhyChoose() {
     setWhyChooseData((prev) => ({ ...prev, title: value }));
   };
 
-  const handleCardChange = (
+  const handleBenefitChange = (
     index: number,
-    field: keyof WhyChooseCard,
+    field: keyof Benefit,
     value: string,
   ) => {
     setWhyChooseData((prev) => ({
       ...prev,
-      cards: prev.cards.map((card, i) =>
-        i === index ? { ...card, [field]: value } : card,
+      benefits: prev.benefits.map((benefit, i) =>
+        i === index ? { ...benefit, [field]: value } : benefit,
       ),
     }));
   };
 
   const handleImageUpload = (
     index: number,
-    type: "icon" | "image",
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
       // In a real implementation, you would upload to a storage service
       const imageUrl = URL.createObjectURL(file);
-      handleCardChange(index, type, imageUrl);
+      handleBenefitChange(index, "image", imageUrl);
     }
-  };
-
-  const handleButtonChange = (field: string, value: string) => {
-    setWhyChooseData((prev) => ({
-      ...prev,
-      button: {
-        ...prev.button,
-        [field]: value,
-      },
-    }));
   };
 
   const handleSave = async () => {
