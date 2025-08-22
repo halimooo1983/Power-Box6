@@ -454,7 +454,7 @@ CREATE INDEX IF NOT EXISTS idx_email_subscriptions_active ON email_subscriptions
 CREATE INDEX IF NOT EXISTS idx_email_subscriptions_subscribed_at ON email_subscriptions(subscribed_at);
 
 -- =====================================================
--- 12. CREATE FUNCTIONS FOR UPDATED_AT TRIGGERS
+-- 13. CREATE FUNCTIONS FOR UPDATED_AT TRIGGERS
 -- =====================================================
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
