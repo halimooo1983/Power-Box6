@@ -62,16 +62,23 @@ export function HeroProvider({ children }: { children: ReactNode }) {
         if (error.code === "PGRST116" || error.code === "42P01") {
           console.info("Hero section table not found, using default data");
         } else {
-          logError("Error loading hero data:", error);
+          console.warn("Error loading hero data:", error);
         }
+        // Always ensure we have data even on error
+        setHeroData(defaultHeroData);
         return;
       }
 
       if (data && data.content) {
         setHeroData({ ...defaultHeroData, ...data.content });
+      } else {
+        // Fallback to default data if no content
+        setHeroData(defaultHeroData);
       }
     } catch (error) {
       console.info("Using default hero data due to database connection issue");
+      // Always ensure we have data even on connection failure
+      setHeroData(defaultHeroData);
     } finally {
       setIsLoading(false);
     }
