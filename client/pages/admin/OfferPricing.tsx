@@ -5,7 +5,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Save, Plus, Trash2, Link as LinkIcon, Upload, Image as ImageIcon, X } from "lucide-react";
+import {
+  Save,
+  Plus,
+  Trash2,
+  Link as LinkIcon,
+  Upload,
+  Image as ImageIcon,
+  X,
+} from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
 interface TrustElement {
@@ -59,11 +67,16 @@ export default function OfferPricing() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleChange = (field: keyof OfferPricingData, value: string | number) => {
+  const handleChange = (
+    field: keyof OfferPricingData,
+    value: string | number,
+  ) => {
     setOfferData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       try {
@@ -126,7 +139,11 @@ export default function OfferPricing() {
     }));
   };
 
-  const updateTrustElement = (index: number, field: "icon" | "text", value: string) => {
+  const updateTrustElement = (
+    index: number,
+    field: "icon" | "text",
+    value: string,
+  ) => {
     setOfferData((prev) => ({
       ...prev,
       trust_elements: prev.trust_elements.map((element, i) =>
@@ -267,7 +284,9 @@ export default function OfferPricing() {
               type="number"
               step="0.01"
               value={offerData.sale_price}
-              onChange={(e) => handleChange("sale_price", parseFloat(e.target.value) || 0)}
+              onChange={(e) =>
+                handleChange("sale_price", parseFloat(e.target.value) || 0)
+              }
               placeholder="31.95"
               className="mt-1"
             />
@@ -311,7 +330,9 @@ export default function OfferPricing() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => document.getElementById("offer-image-upload")?.click()}
+                      onClick={() =>
+                        document.getElementById("offer-image-upload")?.click()
+                      }
                       className="flex items-center gap-2"
                     >
                       <Upload className="w-4 h-4" />
@@ -332,11 +353,17 @@ export default function OfferPricing() {
                 <div className="space-y-4">
                   <ImageIcon className="w-16 h-16 text-gray-400 mx-auto" />
                   <div>
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">Upload Offer Image</h4>
-                    <p className="text-gray-600 mb-4">Add a custom image for your offer section</p>
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">
+                      Upload Offer Image
+                    </h4>
+                    <p className="text-gray-600 mb-4">
+                      Add a custom image for your offer section
+                    </p>
                     <Button
                       variant="outline"
-                      onClick={() => document.getElementById("offer-image-upload")?.click()}
+                      onClick={() =>
+                        document.getElementById("offer-image-upload")?.click()
+                      }
                       className="flex items-center gap-2"
                     >
                       <Upload className="w-4 h-4" />
@@ -367,7 +394,8 @@ export default function OfferPricing() {
             </div>
 
             <p className="text-xs text-gray-500 mt-2">
-              Recommended size: 400x300px or similar aspect ratio for best display
+              Recommended size: 400x300px or similar aspect ratio for best
+              display
             </p>
           </div>
         </CardContent>
@@ -446,12 +474,17 @@ export default function OfferPricing() {
           </div>
           <div className="space-y-3">
             {offerData.trust_elements.map((element, index) => (
-              <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+              <div
+                key={index}
+                className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg"
+              >
                 <div className="w-32">
                   <Label className="text-xs">Icon</Label>
                   <select
                     value={element.icon}
-                    onChange={(e) => updateTrustElement(index, "icon", e.target.value)}
+                    onChange={(e) =>
+                      updateTrustElement(index, "icon", e.target.value)
+                    }
                     className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
                   >
                     <option value="Shield">Shield</option>
@@ -466,7 +499,9 @@ export default function OfferPricing() {
                   <Label className="text-xs">Text</Label>
                   <Input
                     value={element.text}
-                    onChange={(e) => updateTrustElement(index, "text", e.target.value)}
+                    onChange={(e) =>
+                      updateTrustElement(index, "text", e.target.value)
+                    }
                     placeholder="Enter trust element text..."
                     className="mt-1"
                   />
@@ -499,7 +534,9 @@ export default function OfferPricing() {
         <CardContent>
           <div className="p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-xl">
             <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-2 text-gray-900">{offerData.title}</h3>
+              <h3 className="text-3xl font-bold mb-2 text-gray-900">
+                {offerData.title}
+              </h3>
               <p className="text-gray-600 text-lg">{offerData.subtitle}</p>
             </div>
 
@@ -535,7 +572,10 @@ export default function OfferPricing() {
                   {/* Benefits */}
                   <div className="space-y-3 mb-6">
                     {offerData.benefits.map((benefit, index) => (
-                      <div key={index} className="flex items-center gap-3 text-sm">
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 text-sm"
+                      >
                         <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
                         <span className="text-gray-700">{benefit}</span>
                       </div>

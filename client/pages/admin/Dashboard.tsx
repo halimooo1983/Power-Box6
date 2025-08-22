@@ -17,7 +17,7 @@ import {
   ArrowUpRight,
   TrendingUp,
   Clock,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -31,7 +31,7 @@ export default function Dashboard() {
       icon: Search,
       color: "from-purple-500 to-purple-600",
       path: "/admin/seo",
-      priority: "high"
+      priority: "high",
     },
     {
       title: "Hero Section",
@@ -39,7 +39,7 @@ export default function Dashboard() {
       icon: Megaphone,
       color: "from-blue-500 to-blue-600",
       path: "/admin/hero",
-      priority: "high"
+      priority: "high",
     },
     {
       title: "Product Gallery",
@@ -47,7 +47,7 @@ export default function Dashboard() {
       icon: Package,
       color: "from-green-500 to-green-600",
       path: "/admin/inside-box",
-      priority: "medium"
+      priority: "medium",
     },
     {
       title: "Customer Reviews",
@@ -55,7 +55,7 @@ export default function Dashboard() {
       icon: MessageSquare,
       color: "from-indigo-500 to-indigo-600",
       path: "/admin/testimonials",
-      priority: "medium"
+      priority: "medium",
     },
     {
       title: "Offer & Pricing",
@@ -63,7 +63,7 @@ export default function Dashboard() {
       icon: DollarSign,
       color: "from-emerald-500 to-emerald-600",
       path: "/admin/offer-pricing",
-      priority: "high"
+      priority: "high",
     },
     {
       title: "Social Media",
@@ -71,7 +71,7 @@ export default function Dashboard() {
       icon: Link2,
       color: "from-cyan-500 to-cyan-600",
       path: "/admin/footer",
-      priority: "low"
+      priority: "low",
     },
     {
       title: "Popups & Modals",
@@ -79,8 +79,8 @@ export default function Dashboard() {
       icon: Zap,
       color: "from-yellow-500 to-yellow-600",
       path: "/admin/popups",
-      priority: "medium"
-    }
+      priority: "medium",
+    },
   ];
 
   return (
@@ -98,7 +98,8 @@ export default function Dashboard() {
                 Welcome to Admin Dashboard
               </h2>
               <p className="text-blue-100 text-lg">
-                Manage your website content, SEO, and tracking settings with ease.
+                Manage your website content, SEO, and tracking settings with
+                ease.
               </p>
             </div>
           </div>
@@ -133,7 +134,9 @@ export default function Dashboard() {
 
         <Card className="border-0 shadow-lg bg-gradient-to-br from-green-50 to-green-100 hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-green-900">System Status</CardTitle>
+            <CardTitle className="text-sm font-medium text-green-900">
+              System Status
+            </CardTitle>
             <div className="p-2 bg-green-500 rounded-lg">
               <CheckCircle className="h-4 w-4 text-white" />
             </div>
@@ -149,7 +152,9 @@ export default function Dashboard() {
 
         <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-purple-900">Data Mode</CardTitle>
+            <CardTitle className="text-sm font-medium text-purple-900">
+              Data Mode
+            </CardTitle>
             <div className="p-2 bg-purple-500 rounded-lg">
               <BarChart3 className="h-4 w-4 text-white" />
             </div>
@@ -165,7 +170,9 @@ export default function Dashboard() {
 
         <Card className="border-0 shadow-lg bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-orange-900">Last Updated</CardTitle>
+            <CardTitle className="text-sm font-medium text-orange-900">
+              Last Updated
+            </CardTitle>
             <div className="p-2 bg-orange-500 rounded-lg">
               <Clock className="h-4 w-4 text-white" />
             </div>
@@ -193,35 +200,41 @@ export default function Dashboard() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            <span className="text-sm font-medium text-gray-700">High Priority</span>
+            <span className="text-sm font-medium text-gray-700">
+              High Priority
+            </span>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {quickActions.filter(action => action.priority === 'high').map((action) => {
-              const IconComponent = action.icon;
-              return (
-                <Card
-                  key={action.path}
-                  className="group border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
-                  onClick={() => navigate(action.path)}
-                >
-                  <div className={`h-2 bg-gradient-to-r ${action.color}`} />
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`p-3 bg-gradient-to-r ${action.color} rounded-xl shadow-lg`}>
-                        <IconComponent className="w-6 h-6 text-white" />
+            {quickActions
+              .filter((action) => action.priority === "high")
+              .map((action) => {
+                const IconComponent = action.icon;
+                return (
+                  <Card
+                    key={action.path}
+                    className="group border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
+                    onClick={() => navigate(action.path)}
+                  >
+                    <div className={`h-2 bg-gradient-to-r ${action.color}`} />
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div
+                          className={`p-3 bg-gradient-to-r ${action.color} rounded-xl shadow-lg`}
+                        >
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
                       </div>
-                      <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
-                    </div>
-                    <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
-                      {action.title}
-                    </h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {action.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                      <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
+                        {action.title}
+                      </h4>
+                      <p className="text-sm text-gray-600 leading-relaxed">
+                        {action.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
           </div>
         </div>
 
@@ -229,34 +242,40 @@ export default function Dashboard() {
         <div className="space-y-4">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span className="text-sm font-medium text-gray-700">Other Sections</span>
+            <span className="text-sm font-medium text-gray-700">
+              Other Sections
+            </span>
           </div>
           <div className="grid md:grid-cols-4 gap-4">
-            {quickActions.filter(action => action.priority !== 'high').map((action) => {
-              const IconComponent = action.icon;
-              return (
-                <Card
-                  key={action.path}
-                  className="group border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
-                  onClick={() => navigate(action.path)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className={`p-2 bg-gradient-to-r ${action.color} rounded-lg`}>
-                        <IconComponent className="w-4 h-4 text-white" />
+            {quickActions
+              .filter((action) => action.priority !== "high")
+              .map((action) => {
+                const IconComponent = action.icon;
+                return (
+                  <Card
+                    key={action.path}
+                    className="group border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
+                    onClick={() => navigate(action.path)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div
+                          className={`p-2 bg-gradient-to-r ${action.color} rounded-lg`}
+                        >
+                          <IconComponent className="w-4 h-4 text-white" />
+                        </div>
+                        <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors ml-auto" />
                       </div>
-                      <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors ml-auto" />
-                    </div>
-                    <h4 className="font-medium text-gray-900 mb-1 text-sm group-hover:text-gray-700 transition-colors">
-                      {action.title}
-                    </h4>
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      {action.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                      <h4 className="font-medium text-gray-900 mb-1 text-sm group-hover:text-gray-700 transition-colors">
+                        {action.title}
+                      </h4>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        {action.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
           </div>
         </div>
       </div>

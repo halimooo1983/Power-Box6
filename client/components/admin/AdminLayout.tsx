@@ -15,26 +15,80 @@ import {
   Zap,
   Settings,
   Home,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 
 const adminSections = [
-  { id: "dashboard", label: "Dashboard", path: "/admin", icon: LayoutDashboard, color: "text-blue-600" },
-  { id: "hero", label: "Hero Section", path: "/admin/hero", icon: Megaphone, color: "text-purple-600" },
-  { id: "why-choose", label: "Why Choose", path: "/admin/why-choose", icon: Heart, color: "text-pink-600" },
-  { id: "walmart", label: "Walmart Info", path: "/admin/walmart", icon: Building2, color: "text-orange-600" },
-  { id: "inside-box", label: "Product Gallery", path: "/admin/inside-box", icon: Package, color: "text-green-600" },
-  { id: "testimonials", label: "Customer Reviews", path: "/admin/testimonials", icon: MessageSquare, color: "text-indigo-600" },
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    path: "/admin",
+    icon: LayoutDashboard,
+    color: "text-blue-600",
+  },
+  {
+    id: "hero",
+    label: "Hero Section",
+    path: "/admin/hero",
+    icon: Megaphone,
+    color: "text-purple-600",
+  },
+  {
+    id: "why-choose",
+    label: "Why Choose",
+    path: "/admin/why-choose",
+    icon: Heart,
+    color: "text-pink-600",
+  },
+  {
+    id: "walmart",
+    label: "Walmart Info",
+    path: "/admin/walmart",
+    icon: Building2,
+    color: "text-orange-600",
+  },
+  {
+    id: "inside-box",
+    label: "Product Gallery",
+    path: "/admin/inside-box",
+    icon: Package,
+    color: "text-green-600",
+  },
+  {
+    id: "testimonials",
+    label: "Customer Reviews",
+    path: "/admin/testimonials",
+    icon: MessageSquare,
+    color: "text-indigo-600",
+  },
   {
     id: "offer-pricing",
     label: "Offer & Pricing",
     path: "/admin/offer-pricing",
     icon: DollarSign,
-    color: "text-emerald-600"
+    color: "text-emerald-600",
   },
-  { id: "footer", label: "Social Media", path: "/admin/footer", icon: Link2, color: "text-cyan-600" },
-  { id: "seo", label: "SEO & Tracking", path: "/admin/seo", icon: Search, color: "text-slate-600" },
-  { id: "popups", label: "Popups & Modals", path: "/admin/popups", icon: Zap, color: "text-yellow-600" },
+  {
+    id: "footer",
+    label: "Social Media",
+    path: "/admin/footer",
+    icon: Link2,
+    color: "text-cyan-600",
+  },
+  {
+    id: "seo",
+    label: "SEO & Tracking",
+    path: "/admin/seo",
+    icon: Search,
+    color: "text-slate-600",
+  },
+  {
+    id: "popups",
+    label: "Popups & Modals",
+    path: "/admin/popups",
+    icon: Zap,
+    color: "text-yellow-600",
+  },
 ];
 
 export function AdminLayout() {
@@ -52,14 +106,16 @@ export function AdminLayout() {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                   Snack Box Admin
                 </h1>
-                <p className="text-sm text-gray-500">Content Management System</p>
+                <p className="text-sm text-gray-500">
+                  Content Management System
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.open('/', '_blank')}
+                onClick={() => window.open("/", "_blank")}
                 className="flex items-center gap-2"
               >
                 <Home className="w-4 h-4" />
@@ -97,16 +153,20 @@ export function AdminLayout() {
                       >
                         {({ isActive }) => (
                           <>
-                            <div className={cn(
-                              "p-2 rounded-lg transition-colors",
-                              isActive
-                                ? "bg-white/20"
-                                : "bg-gray-100 group-hover:bg-gray-200"
-                            )}>
-                              <IconComponent className={cn(
-                                "w-4 h-4 transition-colors",
-                                isActive ? "text-white" : section.color
-                              )} />
+                            <div
+                              className={cn(
+                                "p-2 rounded-lg transition-colors",
+                                isActive
+                                  ? "bg-white/20"
+                                  : "bg-gray-100 group-hover:bg-gray-200",
+                              )}
+                            >
+                              <IconComponent
+                                className={cn(
+                                  "w-4 h-4 transition-colors",
+                                  isActive ? "text-white" : section.color,
+                                )}
+                              />
                             </div>
                             <span className="flex-1">{section.label}</span>
                             {isActive && (

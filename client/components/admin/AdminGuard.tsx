@@ -45,7 +45,8 @@ export function AdminGuard({ children }: AdminGuardProps) {
             <div className="flex items-center gap-2">
               <Database className="h-4 w-4 text-yellow-600" />
               <span className="text-sm text-yellow-800">
-                Database connection issue detected. Admin panel will work with cached data.
+                Database connection issue detected. Admin panel will work with
+                cached data.
               </span>
             </div>
             <Button
@@ -78,7 +79,9 @@ export function AdminGuard({ children }: AdminGuardProps) {
       )}
 
       {/* Admin Panel Content - Always Render */}
-      <div className={`${isConnected !== null ? 'mt-12' : ''} transition-all duration-300`}>
+      <div
+        className={`${isConnected !== null ? "mt-12" : ""} transition-all duration-300`}
+      >
         {children}
       </div>
     </div>

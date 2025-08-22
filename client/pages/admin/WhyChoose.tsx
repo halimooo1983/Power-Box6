@@ -35,38 +35,44 @@ const defaultWhyChooseData: WhyChooseData = {
       description:
         "Perfect mix of breakfast bars and savory snacks for any time of day",
       color: "blue",
-      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F4d9abe9f679440fcb3470285697707f4?format=webp&width=800",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F4d9abe9f679440fcb3470285697707f4?format=webp&width=800",
     },
     {
       title: "High-End Packaging",
       description:
         "Attractive and professional packaging that makes a great impression",
       color: "purple",
-      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F6305c43f8b6449fc8926c50b002e25fe?format=webp&width=800",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F6305c43f8b6449fc8926c50b002e25fe?format=webp&width=800",
     },
     {
       title: "Grab-and-Go Convenience",
       description: "Individually packaged snacks perfect for busy lifestyles",
       color: "green",
-      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F26b950db7e9644baa7113c5a0046d0fa?format=webp&width=800",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F26b950db7e9644baa7113c5a0046d0fa?format=webp&width=800",
     },
     {
       title: "Suitable for All Ages",
       description: "Perfect for adults, teens, and college students alike",
       color: "orange",
-      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2Fa7c068e933744309b8f41ed0726156a2?format=webp&width=800",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2Fa7c068e933744309b8f41ed0726156a2?format=webp&width=800",
     },
     {
       title: "Heartwarming Greeting Card",
       description: "Comes with a special greeting card to show you care",
       color: "red",
-      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F19d8d6717d2a4dc6b633c9494573527a?format=webp&width=800",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F19d8d6717d2a4dc6b633c9494573527a?format=webp&width=800",
     },
     {
       title: "42 Count Value",
       description: "Generous quantity ensuring lasting satisfaction and value",
       color: "indigo",
-      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F74bff8b15ba640b1acf1428f6b9b71b9?format=webp&width=800",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F74bff8b15ba640b1acf1428f6b9b71b9?format=webp&width=800",
     },
   ],
 };
@@ -253,14 +259,21 @@ export default function WhyChoose() {
                 </select>
                 <div className="mt-2 flex items-center gap-2">
                   <span className="text-sm text-gray-600">Preview:</span>
-                  <div className={`w-4 h-4 rounded ${
-                    benefit.color === "blue" ? "bg-blue-600" :
-                    benefit.color === "purple" ? "bg-purple-600" :
-                    benefit.color === "green" ? "bg-green-600" :
-                    benefit.color === "orange" ? "bg-orange-600" :
-                    benefit.color === "red" ? "bg-red-600" :
-                    "bg-indigo-600"
-                  }`} />
+                  <div
+                    className={`w-4 h-4 rounded ${
+                      benefit.color === "blue"
+                        ? "bg-blue-600"
+                        : benefit.color === "purple"
+                          ? "bg-purple-600"
+                          : benefit.color === "green"
+                            ? "bg-green-600"
+                            : benefit.color === "orange"
+                              ? "bg-orange-600"
+                              : benefit.color === "red"
+                                ? "bg-red-600"
+                                : "bg-indigo-600"
+                    }`}
+                  />
                 </div>
               </div>
 
@@ -292,7 +305,9 @@ export default function WhyChoose() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleBenefitChange(index, "image", "")}
+                          onClick={() =>
+                            handleBenefitChange(index, "image", "")
+                          }
                           className="text-red-600"
                         >
                           Remove
