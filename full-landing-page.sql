@@ -447,7 +447,7 @@ ALTER TABLE email_subscriptions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public insert on email_subscriptions" ON email_subscriptions FOR INSERT WITH CHECK (true);
 
 -- =====================================================
--- 11. CREATE INDEXES FOR BETTER PERFORMANCE
+-- 12. CREATE INDEXES FOR BETTER PERFORMANCE
 -- =====================================================
 CREATE INDEX IF NOT EXISTS idx_email_subscriptions_email ON email_subscriptions(email);
 CREATE INDEX IF NOT EXISTS idx_email_subscriptions_active ON email_subscriptions(is_active);
