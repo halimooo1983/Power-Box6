@@ -486,51 +486,76 @@ export default function OfferPricing() {
         </CardContent>
       </Card>
 
-      {/* Preview Section */}
-      <Card>
+      {/* Enhanced Preview Section */}
+      <Card className="border-2 border-indigo-100">
         <CardHeader>
-          <CardTitle>Section Preview</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-indigo-100 rounded-lg">
+              <ImageIcon className="w-5 h-5 text-indigo-600" />
+            </div>
+            Live Preview
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-lg">
-            <div className="text-center mb-6">
-              <Badge variant="secondary" className="mb-4">
-                {offerData.promo_text}
-              </Badge>
-              <h3 className="text-2xl font-bold mb-2">{offerData.title}</h3>
-              <p className="text-gray-600">{offerData.subtitle}</p>
+          <div className="p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-xl">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-2 text-gray-900">{offerData.title}</h3>
+              <p className="text-gray-600 text-lg">{offerData.subtitle}</p>
             </div>
 
-            <div className="bg-white rounded-lg p-6 shadow-lg max-w-md mx-auto">
-              <h4 className="font-semibold mb-3">
-                {offerData.offer_card.product_name}
-              </h4>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-gray-500 line-through">
-                  {offerData.offer_card.old_price}
-                </span>
-                <span className="text-green-600 font-bold text-xl">
-                  {offerData.offer_card.new_price}
-                </span>
-              </div>
-
-              <div className="space-y-2 mb-4">
-                {offerData.offer_card.features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span>{feature}</span>
+            <div className="grid lg:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
+              {/* Product Image */}
+              <div className="text-center">
+                {offerData.offer_image ? (
+                  <img
+                    src={offerData.offer_image}
+                    alt="Product"
+                    className="w-full max-w-md mx-auto rounded-xl shadow-lg"
+                  />
+                ) : (
+                  <div className="w-full max-w-md mx-auto h-64 bg-gray-200 rounded-xl flex items-center justify-center">
+                    <div className="text-center text-gray-500">
+                      <ImageIcon className="w-16 h-16 mx-auto mb-2" />
+                      <p>No image uploaded</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
 
-              <Button className="w-full mb-4" disabled>
-                {offerData.offer_card.button.label}
-              </Button>
+              {/* Pricing and Details */}
+              <div className="space-y-6">
+                {/* Price Display */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <div className="text-center mb-4">
+                    <div className="text-4xl font-bold text-green-600 mb-2">
+                      ${offerData.sale_price}
+                    </div>
+                  </div>
 
-              <div className="flex justify-between text-xs text-gray-500">
-                {offerData.offer_card.guarantees.map((guarantee, index) => (
-                  <span key={index}>{guarantee}</span>
-                ))}
+                  {/* Benefits */}
+                  <div className="space-y-3 mb-6">
+                    {offerData.benefits.map((benefit, index) => (
+                      <div key={index} className="flex items-center gap-3 text-sm">
+                        <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                        <span className="text-gray-700">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <Button className="w-full py-3 text-lg mb-4" disabled>
+                    {offerData.cta_text}
+                  </Button>
+
+                  {/* Trust Elements */}
+                  <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-600">
+                    {offerData.trust_elements.map((element, index) => (
+                      <div key={index} className="flex items-center gap-1">
+                        <span className="font-medium">{element.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
