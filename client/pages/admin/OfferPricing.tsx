@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Save, Plus, Trash2, Link as LinkIcon } from "lucide-react";
+import { Save, Plus, Trash2, Link as LinkIcon, Upload, Image as ImageIcon, X } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
 interface OfferPricingData {
