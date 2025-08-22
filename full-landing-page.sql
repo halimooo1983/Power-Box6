@@ -492,6 +492,7 @@ CREATE TRIGGER update_seo_settings_updated_at BEFORE UPDATE ON seo_settings FOR 
 -- ✓ footer - Social media links
 -- ✓ product_popup - Product modal content
 -- ✓ exit_intent_popup - Email subscription popup
+-- ✓ seo_settings - SEO meta tags and tracking
 -- ✓ email_subscriptions - Store newsletter signups
 -- 
 -- Features Enabled:
