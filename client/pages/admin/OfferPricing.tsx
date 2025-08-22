@@ -59,97 +59,87 @@ export default function OfferPricing() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: keyof OfferPricingData, value: string | number) => {
     setOfferData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleOfferCardChange = (field: string, value: string) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        // Upload to Supabase Storage
+        const fileExt = file.name.split(".").pop();
+        const fileName = `offer-image-${Date.now()}.${fileExt}`;
+
+        const { data, error } = await supabase.storage
+          .from("images")
+          .upload(fileName, file);
+
+        if (error) {
+          console.error("Upload error:", error);
+          alert("Error uploading image. Please try again.");
+          return;
+        }
+
+        // Get public URL
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("images").getPublicUrl(fileName);
+
+        handleChange("offer_image", publicUrl);
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Error uploading image. Please try again.");
+      }
+    }
+  };
+
+  const addBenefit = () => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        [field]: value,
-      },
+      benefits: [...prev.benefits, ""],
     }));
   };
 
-  const handleButtonChange = (field: string, value: string) => {
+  const updateBenefit = (index: number, value: string) => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        button: {
-          ...prev.offer_card.button,
-          [field]: value,
-        },
-      },
+      benefits: prev.benefits.map((benefit, i) =>
+        i === index ? value : benefit,
+      ),
     }));
   };
 
-  const addFeature = () => {
-    setOfferData((prev) => ({
-      ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        features: [...prev.offer_card.features, ""],
-      },
-    }));
-  };
-
-  const updateFeature = (index: number, value: string) => {
-    setOfferData((prev) => ({
-      ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        features: prev.offer_card.features.map((feature, i) =>
-          i === index ? value : feature,
-        ),
-      },
-    }));
-  };
-
-  const removeFeature = (index: number) => {
-    if (offerData.offer_card.features.length > 1) {
+  const removeBenefit = (index: number) => {
+    if (offerData.benefits.length > 1) {
       setOfferData((prev) => ({
         ...prev,
-        offer_card: {
-          ...prev.offer_card,
-          features: prev.offer_card.features.filter((_, i) => i !== index),
-        },
+        benefits: prev.benefits.filter((_, i) => i !== index),
       }));
     }
   };
 
-  const addGuarantee = () => {
+  const addTrustElement = () => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        guarantees: [...prev.offer_card.guarantees, ""],
-      },
+      trust_elements: [...prev.trust_elements, { icon: "Shield", text: "" }],
     }));
   };
 
-  const updateGuarantee = (index: number, value: string) => {
+  const updateTrustElement = (index: number, field: "icon" | "text", value: string) => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        guarantees: prev.offer_card.guarantees.map((guarantee, i) =>
-          i === index ? value : guarantee,
-        ),
-      },
+      trust_elements: prev.trust_elements.map((element, i) =>
+        i === index ? { ...element, [field]: value } : element,
+      ),
     }));
   };
 
-  const removeGuarantee = (index: number) => {
-    if (offerData.offer_card.guarantees.length > 1) {
+  const removeTrustElement = (index: number) => {
+    if (offerData.trust_elements.length > 1) {
       setOfferData((prev) => ({
         ...prev,
-        offer_card: {
-          ...prev.offer_card,
-          guarantees: prev.offer_card.guarantees.filter((_, i) => i !== index),
-        },
+        trust_elements: prev.trust_elements.filter((_, i) => i !== index),
       }));
     }
   };
