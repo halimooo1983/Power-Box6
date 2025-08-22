@@ -398,7 +398,37 @@ INSERT INTO exit_intent_popup (content) VALUES (
 );
 
 -- =====================================================
--- 10. EMAIL SUBSCRIPTIONS TABLE (for storing subscriptions)
+-- 10. SEO SETTINGS TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS seo_settings (
+    id BIGSERIAL PRIMARY KEY,
+    content JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE seo_settings ENABLE ROW LEVEL SECURITY;
+
+-- Create policy for public read access
+CREATE POLICY "Allow public read access on seo_settings" ON seo_settings FOR SELECT USING (true);
+
+-- Insert SEO settings data with exact frontend structure
+INSERT INTO seo_settings (content) VALUES (
+    '{
+        "meta_title": "Nutritious Snack Box with Breakfast Bars and Delicious Chips | Gift A Snack (42 Count)",
+        "meta_description": "Get your 42-count nutritious snack box with breakfast bars and delicious chips. Perfect for gifting, office sharing, or personal enjoyment. Fast delivery, high-quality snacks.",
+        "meta_keywords": "snack box, breakfast bars, healthy snacks, gift box, nutritious snacks, office snacks, 42 count, delicious chips",
+        "og_title": "Nutritious Snack Box - 42 Premium Snacks | Gift A Snack",
+        "og_description": "Amazing variety of snacks! Perfect for office teams, college students, and gifts. Fresh & high-quality snacks with fast delivery.",
+        "og_image": "https://cdn.builder.io/api/v1/image/assets%2F84282e2d620247d2b8d8845fda2c790e%2F79d471e5bc56457eb2c3b1c3eb6586ae?format=webp&width=1200",
+        "canonical_url": "",
+        "facebook_pixel_id": ""
+    }'
+);
+
+-- =====================================================
+-- 11. EMAIL SUBSCRIPTIONS TABLE (for storing subscriptions)
 -- =====================================================
 CREATE TABLE IF NOT EXISTS email_subscriptions (
     id BIGSERIAL PRIMARY KEY,
