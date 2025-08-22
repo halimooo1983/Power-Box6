@@ -16,22 +16,24 @@ interface DataProviderProps {
 
 export function DataProvider({ children }: DataProviderProps) {
   return (
-    <SEOProvider>
-      <PopupProvider>
-        <HeroProvider>
-          <WhyChooseProvider>
-            <ProductGalleryProvider>
-              <TrustProvider>
-                <ReviewsProvider>
-                  <OfferPricingProvider>
-                    <FooterProvider>{children}</FooterProvider>
-                  </OfferPricingProvider>
-                </ReviewsProvider>
-              </TrustProvider>
-            </ProductGalleryProvider>
-          </WhyChooseProvider>
-        </HeroProvider>
-      </PopupProvider>
-    </SEOProvider>
+    <DataSyncProvider>
+      <SEOProvider>
+        <PopupProvider>
+          <HeroProvider>
+            <WhyChooseProvider>
+              <ProductGalleryProvider>
+                <TrustProvider>
+                  <ReviewsProvider>
+                    <OfferPricingProvider>
+                      <FooterProvider>{children}</FooterProvider>
+                    </OfferPricingProvider>
+                  </ReviewsProvider>
+                </TrustProvider>
+              </ProductGalleryProvider>
+            </WhyChooseProvider>
+          </HeroProvider>
+        </PopupProvider>
+      </SEOProvider>
+    </DataSyncProvider>
   );
 }
