@@ -10,7 +10,6 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Linkedin,
   Youtube,
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
