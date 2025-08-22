@@ -110,10 +110,15 @@ export default function WhyChoose() {
     try {
       console.log("Saving why choose data:", whyChooseData);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { data, error } = await supabase.from("why_choose_section").upsert({
+        id: 1,
+        content: whyChooseData,
+        updated_at: new Date().toISOString(),
+      });
 
-      localStorage.setItem("why_choose_section", JSON.stringify(whyChooseData));
+      if (error) {
+        throw error;
+      }
 
       alert("Why Choose section saved successfully!");
     } catch (error) {
@@ -126,15 +131,27 @@ export default function WhyChoose() {
 
   // Load data on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem("why_choose_section");
-    if (savedData) {
+    const loadData = async () => {
       try {
-        const parsed = JSON.parse(savedData);
-        setWhyChooseData(parsed);
+        const { data, error } = await supabase
+          .from("why_choose_section")
+          .select("*")
+          .single();
+
+        if (error && error.code !== "PGRST116") {
+          logError("Error loading data:", error);
+          return;
+        }
+
+        if (data && data.content) {
+          setWhyChooseData(data.content);
+        }
       } catch (error) {
-        logError("Error loading saved data:", error);
+        logError("Error loading data:", error);
       }
-    }
+    };
+
+    loadData();
   }, []);
 
   return (
