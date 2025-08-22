@@ -373,172 +373,115 @@ export default function OfferPricing() {
         </CardContent>
       </Card>
 
-      {/* Offer Card */}
+      {/* Benefits Section */}
       <Card className="border-2 border-orange-100">
         <CardHeader>
-          <CardTitle>Offer Card</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <Plus className="w-5 h-5 text-orange-600" />
+            </div>
+            Product Benefits
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Product Info */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="product-name">Product Name</Label>
-              <Input
-                id="product-name"
-                value={offerData.offer_card.product_name}
-                onChange={(e) =>
-                  handleOfferCardChange("product_name", e.target.value)
-                }
-                placeholder="Enter product name..."
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="old-price">Old Price</Label>
-              <Input
-                id="old-price"
-                value={offerData.offer_card.old_price}
-                onChange={(e) =>
-                  handleOfferCardChange("old_price", e.target.value)
-                }
-                placeholder="$42.99"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="new-price">New Price</Label>
-              <Input
-                id="new-price"
-                value={offerData.offer_card.new_price}
-                onChange={(e) =>
-                  handleOfferCardChange("new_price", e.target.value)
-                }
-                placeholder="$31.95"
-                className="mt-1"
-              />
-            </div>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between mb-3">
+            <Label>Benefits List</Label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={addBenefit}
+              className="flex items-center gap-1"
+            >
+              <Plus className="w-4 h-4" />
+              Add Benefit
+            </Button>
           </div>
-
-          {/* Features */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <Label>Product Features</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={addFeature}
-                className="flex items-center gap-1"
-              >
-                <Plus className="w-4 h-4" />
-                Add Feature
-              </Button>
-            </div>
-            <div className="space-y-2">
-              {offerData.offer_card.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <Input
-                      value={feature}
-                      onChange={(e) => updateFeature(index, e.target.value)}
-                      placeholder="Enter feature description..."
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeFeature(index)}
-                    disabled={offerData.offer_card.features.length === 1}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Button Configuration */}
-          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <Label className="text-sm font-medium text-blue-800 mb-3 block">
-              Call-to-Action Button
-            </Label>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="button-label">Button Label</Label>
-                <Input
-                  id="button-label"
-                  value={offerData.offer_card.button.label}
-                  onChange={(e) => handleButtonChange("label", e.target.value)}
-                  placeholder="Enter button label..."
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="button-popup-title">Popup Title</Label>
-                <Input
-                  id="button-popup-title"
-                  value={offerData.offer_card.button.popup_title}
-                  onChange={(e) =>
-                    handleButtonChange("popup_title", e.target.value)
-                  }
-                  placeholder="Enter popup title..."
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="button-popup-link">Popup Modal Link</Label>
-                <div className="flex items-center gap-2 mt-1">
-                  <LinkIcon className="w-4 h-4 text-gray-400" />
+          <div className="space-y-2">
+            {offerData.benefits.map((benefit, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="flex-1">
                   <Input
-                    id="button-popup-link"
-                    value={offerData.offer_card.button.popup_link}
-                    onChange={(e) =>
-                      handleButtonChange("popup_link", e.target.value)
-                    }
-                    placeholder="Enter popup modal link..."
-                    className="flex-1"
+                    value={benefit}
+                    onChange={(e) => updateBenefit(index, e.target.value)}
+                    placeholder="Enter benefit description..."
                   />
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeBenefit(index)}
+                  disabled={offerData.benefits.length === 1}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
-            </div>
+            ))}
           </div>
+        </CardContent>
+      </Card>
 
-          {/* Guarantees */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <Label>Trust Guarantees</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={addGuarantee}
-                className="flex items-center gap-1"
-              >
-                <Plus className="w-4 h-4" />
-                Add Guarantee
-              </Button>
+      {/* Trust Elements Section */}
+      <Card className="border-2 border-purple-100">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Badge className="w-5 h-5 text-purple-600" />
             </div>
-            <div className="space-y-2">
-              {offerData.offer_card.guarantees.map((guarantee, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <Input
-                      value={guarantee}
-                      onChange={(e) => updateGuarantee(index, e.target.value)}
-                      placeholder="Enter guarantee text..."
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeGuarantee(index)}
-                    disabled={offerData.offer_card.guarantees.length === 1}
-                    className="text-red-600 hover:text-red-700"
+            Trust Elements
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between mb-3">
+            <Label>Trust Badges</Label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={addTrustElement}
+              className="flex items-center gap-1"
+            >
+              <Plus className="w-4 h-4" />
+              Add Trust Element
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {offerData.trust_elements.map((element, index) => (
+              <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <div className="w-32">
+                  <Label className="text-xs">Icon</Label>
+                  <select
+                    value={element.icon}
+                    onChange={(e) => updateTrustElement(index, "icon", e.target.value)}
+                    className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                    <option value="Shield">Shield</option>
+                    <option value="Truck">Truck</option>
+                    <option value="BadgeCheck">Badge Check</option>
+                    <option value="Clock">Clock</option>
+                    <option value="Star">Star</option>
+                    <option value="Award">Award</option>
+                  </select>
                 </div>
-              ))}
-            </div>
+                <div className="flex-1">
+                  <Label className="text-xs">Text</Label>
+                  <Input
+                    value={element.text}
+                    onChange={(e) => updateTrustElement(index, "text", e.target.value)}
+                    placeholder="Enter trust element text..."
+                    className="mt-1"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeTrustElement(index)}
+                  disabled={offerData.trust_elements.length === 1}
+                  className="text-red-600 hover:text-red-700 mt-4"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
