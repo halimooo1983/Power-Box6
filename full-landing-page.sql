@@ -474,6 +474,7 @@ CREATE TRIGGER update_offer_pricing_updated_at BEFORE UPDATE ON offer_pricing FO
 CREATE TRIGGER update_footer_updated_at BEFORE UPDATE ON footer FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_product_popup_updated_at BEFORE UPDATE ON product_popup FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_exit_intent_popup_updated_at BEFORE UPDATE ON exit_intent_popup FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_seo_settings_updated_at BEFORE UPDATE ON seo_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- =====================================================
 -- ✅ SETUP COMPLETE!
