@@ -227,40 +227,148 @@ export default function OfferPricing() {
       </div>
 
       {/* Section Headers */}
-      <Card>
+      <Card className="border-2 border-blue-100">
         <CardHeader>
-          <CardTitle>Section Headers</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <ImageIcon className="w-5 h-5 text-blue-600" />
+            </div>
+            Section Content
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="section-title">Main Title</Label>
+              <Input
+                id="section-title"
+                value={offerData.title}
+                onChange={(e) => handleChange("title", e.target.value)}
+                placeholder="Enter main title..."
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="section-subtitle">Subtitle</Label>
+              <Input
+                id="section-subtitle"
+                value={offerData.subtitle}
+                onChange={(e) => handleChange("subtitle", e.target.value)}
+                placeholder="Enter subtitle..."
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="sale-price">Sale Price ($)</Label>
+            <Input
+              id="sale-price"
+              type="number"
+              step="0.01"
+              value={offerData.sale_price}
+              onChange={(e) => handleChange("sale_price", parseFloat(e.target.value) || 0)}
+              placeholder="31.95"
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="cta-text">Call-to-Action Button Text</Label>
+            <Input
+              id="cta-text"
+              value={offerData.cta_text}
+              onChange={(e) => handleChange("cta_text", e.target.value)}
+              placeholder="Get Your Snack Box Now"
+              className="mt-1"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Image Upload Section */}
+      <Card className="border-2 border-green-100">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <ImageIcon className="w-5 h-5 text-green-600" />
+            </div>
+            Offer Image
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="promo-text">Promo Text</Label>
-            <Input
-              id="promo-text"
-              value={offerData.promo_text}
-              onChange={(e) => handleChange("promo_text", e.target.value)}
-              placeholder="Enter promo text..."
-              className="mt-1"
+            <Label>Upload Custom Offer Image</Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center mt-2">
+              {offerData.offer_image ? (
+                <div className="space-y-4">
+                  <img
+                    src={offerData.offer_image}
+                    alt="Offer preview"
+                    className="max-w-full h-48 object-contain mx-auto rounded-lg"
+                  />
+                  <div className="flex gap-2 justify-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById("offer-image-upload")?.click()}
+                      className="flex items-center gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Replace Image
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleChange("offer_image", "")}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <X className="w-4 h-4" />
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <ImageIcon className="w-16 h-16 text-gray-400 mx-auto" />
+                  <div>
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">Upload Offer Image</h4>
+                    <p className="text-gray-600 mb-4">Add a custom image for your offer section</p>
+                    <Button
+                      variant="outline"
+                      onClick={() => document.getElementById("offer-image-upload")?.click()}
+                      className="flex items-center gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Choose Image
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <input
+              id="offer-image-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
             />
-          </div>
-          <div>
-            <Label htmlFor="section-title">Main Title</Label>
-            <Input
-              id="section-title"
-              value={offerData.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              placeholder="Enter main title..."
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="section-subtitle">Subtitle</Label>
-            <Input
-              id="section-subtitle"
-              value={offerData.subtitle}
-              onChange={(e) => handleChange("subtitle", e.target.value)}
-              placeholder="Enter subtitle..."
-              className="mt-1"
-            />
+
+            <div className="mt-3">
+              <Label htmlFor="offer-image-url">Or enter image URL</Label>
+              <Input
+                id="offer-image-url"
+                value={offerData.offer_image || ""}
+                onChange={(e) => handleChange("offer_image", e.target.value)}
+                placeholder="https://example.com/image.jpg"
+                className="mt-1"
+              />
+            </div>
+
+            <p className="text-xs text-gray-500 mt-2">
+              Recommended size: 400x300px or similar aspect ratio for best display
+            </p>
           </div>
         </CardContent>
       </Card>
