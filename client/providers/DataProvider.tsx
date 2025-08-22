@@ -8,6 +8,7 @@ import { TrustProvider } from "@/hooks/use-trust";
 import { ReviewsProvider } from "@/hooks/use-reviews";
 import { OfferPricingProvider } from "@/hooks/use-offer-pricing";
 import { FooterProvider } from "@/hooks/use-footer";
+import { DataSyncProvider } from "@/hooks/use-data-sync";
 
 interface DataProviderProps {
   children: ReactNode;
