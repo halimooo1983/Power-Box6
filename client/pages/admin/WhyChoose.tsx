@@ -14,68 +14,60 @@ import {
 } from "lucide-react";
 import { logError } from "@/lib/error-utils";
 
-interface WhyChooseCard {
+interface Benefit {
   title: string;
   description: string;
-  icon: string;
+  color: string;
   image: string;
 }
 
 interface WhyChooseData {
   title: string;
-  cards: WhyChooseCard[];
-  button: {
-    label: string;
-    popup_link: string;
-  };
+  benefits: Benefit[];
 }
 
 const defaultWhyChooseData: WhyChooseData = {
   title: "Why Choose Our Nutritious Snack Box?",
-  cards: [
+  benefits: [
     {
       title: "Variety of Snacks",
       description:
         "Perfect mix of breakfast bars and savory snacks for any time of day",
-      icon: "",
-      image: "",
+      color: "blue",
+      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F4d9abe9f679440fcb3470285697707f4?format=webp&width=800",
     },
     {
       title: "High-End Packaging",
       description:
         "Attractive and professional packaging that makes a great impression",
-      icon: "",
-      image: "",
+      color: "purple",
+      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F6305c43f8b6449fc8926c50b002e25fe?format=webp&width=800",
     },
     {
       title: "Grab-and-Go Convenience",
       description: "Individually packaged snacks perfect for busy lifestyles",
-      icon: "",
-      image: "",
+      color: "green",
+      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F26b950db7e9644baa7113c5a0046d0fa?format=webp&width=800",
     },
     {
       title: "Suitable for All Ages",
       description: "Perfect for adults, teens, and college students alike",
-      icon: "",
-      image: "",
+      color: "orange",
+      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2Fa7c068e933744309b8f41ed0726156a2?format=webp&width=800",
     },
     {
       title: "Heartwarming Greeting Card",
       description: "Comes with a special greeting card to show you care",
-      icon: "",
-      image: "",
+      color: "red",
+      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F19d8d6717d2a4dc6b633c9494573527a?format=webp&width=800",
     },
     {
       title: "42 Count Value",
       description: "Generous quantity ensuring lasting satisfaction and value",
-      icon: "",
-      image: "",
+      color: "indigo",
+      image: "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F74bff8b15ba640b1acf1428f6b9b71b9?format=webp&width=800",
     },
   ],
-  button: {
-    label: "View Product Details",
-    popup_link: "",
-  },
 };
 
 export default function WhyChoose() {
