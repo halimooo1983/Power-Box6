@@ -5,49 +5,59 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Save, Plus, Trash2, Link as LinkIcon } from "lucide-react";
+import {
+  Save,
+  Plus,
+  Trash2,
+  Link as LinkIcon,
+  Upload,
+  Image as ImageIcon,
+  X,
+} from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 
+interface TrustElement {
+  icon: string;
+  text: string;
+}
+
 interface OfferPricingData {
-  promo_text: string;
   title: string;
   subtitle: string;
-  offer_card: {
-    product_name: string;
-    old_price: string;
-    new_price: string;
-    features: string[];
-    button: {
-      label: string;
-      popup_link: string;
-      popup_title: string;
-    };
-    guarantees: string[];
-  };
+  sale_price: number;
+  benefits: string[];
+  cta_text: string;
+  trust_elements: TrustElement[];
+  offer_image?: string; // New field for offer image
 }
 
 const defaultOfferPricingData: OfferPricingData = {
-  promo_text: "Bestseller - Limited Time Offer",
   title: "Ready to Fuel Your Day?",
   subtitle: "Get your 42-count nutritious snack box today!",
-  offer_card: {
-    product_name: "Nutritious Snack Box",
-    old_price: "$42.99",
-    new_price: "$31.95",
-    features: [
-      "42 premium snacks included",
-      "Fresh & high-quality snacks from top brands",
-      "Perfect for gifting or office sharing",
-      "Fast & reliable delivery nationwide",
-      "Greeting card included",
-    ],
-    button: {
-      label: "Get Your Snack Box Now",
-      popup_link: "",
-      popup_title: "",
+  sale_price: 31.95,
+  benefits: [
+    "42 premium snacks included",
+    "Fresh & high-quality snacks from top brands",
+    "Perfect for gifting or office sharing",
+    "Fast & reliable delivery nationwide",
+    "Greeting card included",
+  ],
+  cta_text: "Get Your Snack Box Now",
+  trust_elements: [
+    {
+      icon: "Shield",
+      text: "Secure Payment",
     },
-    guarantees: ["Secure Payment", "Fast Shipping", "Satisfaction Guaranteed"],
-  },
+    {
+      icon: "Truck",
+      text: "Fast Shipping",
+    },
+    {
+      icon: "BadgeCheck",
+      text: "Satisfaction Guaranteed",
+    },
+  ],
+  offer_image: "",
 };
 
 export default function OfferPricing() {
@@ -57,97 +67,96 @@ export default function OfferPricing() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (
+    field: keyof OfferPricingData,
+    value: string | number,
+  ) => {
     setOfferData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleOfferCardChange = (field: string, value: string) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        // Upload to Supabase Storage
+        const fileExt = file.name.split(".").pop();
+        const fileName = `offer-image-${Date.now()}.${fileExt}`;
+
+        const { data, error } = await supabase.storage
+          .from("images")
+          .upload(fileName, file);
+
+        if (error) {
+          console.error("Upload error:", error);
+          alert("Error uploading image. Please try again.");
+          return;
+        }
+
+        // Get public URL
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("images").getPublicUrl(fileName);
+
+        handleChange("offer_image", publicUrl);
+      } catch (error) {
+        console.error("Upload error:", error);
+        alert("Error uploading image. Please try again.");
+      }
+    }
+  };
+
+  const addBenefit = () => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        [field]: value,
-      },
+      benefits: [...prev.benefits, ""],
     }));
   };
 
-  const handleButtonChange = (field: string, value: string) => {
+  const updateBenefit = (index: number, value: string) => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        button: {
-          ...prev.offer_card.button,
-          [field]: value,
-        },
-      },
+      benefits: prev.benefits.map((benefit, i) =>
+        i === index ? value : benefit,
+      ),
     }));
   };
 
-  const addFeature = () => {
-    setOfferData((prev) => ({
-      ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        features: [...prev.offer_card.features, ""],
-      },
-    }));
-  };
-
-  const updateFeature = (index: number, value: string) => {
-    setOfferData((prev) => ({
-      ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        features: prev.offer_card.features.map((feature, i) =>
-          i === index ? value : feature,
-        ),
-      },
-    }));
-  };
-
-  const removeFeature = (index: number) => {
-    if (offerData.offer_card.features.length > 1) {
+  const removeBenefit = (index: number) => {
+    if (offerData.benefits.length > 1) {
       setOfferData((prev) => ({
         ...prev,
-        offer_card: {
-          ...prev.offer_card,
-          features: prev.offer_card.features.filter((_, i) => i !== index),
-        },
+        benefits: prev.benefits.filter((_, i) => i !== index),
       }));
     }
   };
 
-  const addGuarantee = () => {
+  const addTrustElement = () => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        guarantees: [...prev.offer_card.guarantees, ""],
-      },
+      trust_elements: [...prev.trust_elements, { icon: "Shield", text: "" }],
     }));
   };
 
-  const updateGuarantee = (index: number, value: string) => {
+  const updateTrustElement = (
+    index: number,
+    field: "icon" | "text",
+    value: string,
+  ) => {
     setOfferData((prev) => ({
       ...prev,
-      offer_card: {
-        ...prev.offer_card,
-        guarantees: prev.offer_card.guarantees.map((guarantee, i) =>
-          i === index ? value : guarantee,
-        ),
-      },
+      trust_elements: prev.trust_elements.map((element, i) =>
+        i === index ? { ...element, [field]: value } : element,
+      ),
     }));
   };
 
-  const removeGuarantee = (index: number) => {
-    if (offerData.offer_card.guarantees.length > 1) {
+  const removeTrustElement = (index: number) => {
+    if (offerData.trust_elements.length > 1) {
       setOfferData((prev) => ({
         ...prev,
-        offer_card: {
-          ...prev.offer_card,
-          guarantees: prev.offer_card.guarantees.filter((_, i) => i !== index),
-        },
+        trust_elements: prev.trust_elements.filter((_, i) => i !== index),
       }));
     }
   };
@@ -235,259 +244,358 @@ export default function OfferPricing() {
       </div>
 
       {/* Section Headers */}
-      <Card>
+      <Card className="border-2 border-blue-100">
         <CardHeader>
-          <CardTitle>Section Headers</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <ImageIcon className="w-5 h-5 text-blue-600" />
+            </div>
+            Section Content
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="section-title">Main Title</Label>
+              <Input
+                id="section-title"
+                value={offerData.title}
+                onChange={(e) => handleChange("title", e.target.value)}
+                placeholder="Enter main title..."
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="section-subtitle">Subtitle</Label>
+              <Input
+                id="section-subtitle"
+                value={offerData.subtitle}
+                onChange={(e) => handleChange("subtitle", e.target.value)}
+                placeholder="Enter subtitle..."
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="sale-price">Sale Price ($)</Label>
+            <Input
+              id="sale-price"
+              type="number"
+              step="0.01"
+              value={offerData.sale_price}
+              onChange={(e) =>
+                handleChange("sale_price", parseFloat(e.target.value) || 0)
+              }
+              placeholder="31.95"
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="cta-text">Call-to-Action Button Text</Label>
+            <Input
+              id="cta-text"
+              value={offerData.cta_text}
+              onChange={(e) => handleChange("cta_text", e.target.value)}
+              placeholder="Get Your Snack Box Now"
+              className="mt-1"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Image Upload Section */}
+      <Card className="border-2 border-green-100">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <ImageIcon className="w-5 h-5 text-green-600" />
+            </div>
+            Offer Image
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="promo-text">Promo Text</Label>
-            <Input
-              id="promo-text"
-              value={offerData.promo_text}
-              onChange={(e) => handleChange("promo_text", e.target.value)}
-              placeholder="Enter promo text..."
-              className="mt-1"
+            <Label>Upload Custom Offer Image</Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center mt-2">
+              {offerData.offer_image ? (
+                <div className="space-y-4">
+                  <img
+                    src={offerData.offer_image}
+                    alt="Offer preview"
+                    className="max-w-full h-48 object-contain mx-auto rounded-lg"
+                  />
+                  <div className="flex gap-2 justify-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        document.getElementById("offer-image-upload")?.click()
+                      }
+                      className="flex items-center gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Replace Image
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleChange("offer_image", "")}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <X className="w-4 h-4" />
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <ImageIcon className="w-16 h-16 text-gray-400 mx-auto" />
+                  <div>
+                    <h4 className="text-lg font-medium text-gray-900 mb-2">
+                      Upload Offer Image
+                    </h4>
+                    <p className="text-gray-600 mb-4">
+                      Add a custom image for your offer section
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        document.getElementById("offer-image-upload")?.click()
+                      }
+                      className="flex items-center gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Choose Image
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <input
+              id="offer-image-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
             />
-          </div>
-          <div>
-            <Label htmlFor="section-title">Main Title</Label>
-            <Input
-              id="section-title"
-              value={offerData.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              placeholder="Enter main title..."
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="section-subtitle">Subtitle</Label>
-            <Input
-              id="section-subtitle"
-              value={offerData.subtitle}
-              onChange={(e) => handleChange("subtitle", e.target.value)}
-              placeholder="Enter subtitle..."
-              className="mt-1"
-            />
+
+            <div className="mt-3">
+              <Label htmlFor="offer-image-url">Or enter image URL</Label>
+              <Input
+                id="offer-image-url"
+                value={offerData.offer_image || ""}
+                onChange={(e) => handleChange("offer_image", e.target.value)}
+                placeholder="https://example.com/image.jpg"
+                className="mt-1"
+              />
+            </div>
+
+            <p className="text-xs text-gray-500 mt-2">
+              Recommended size: 400x300px or similar aspect ratio for best
+              display
+            </p>
           </div>
         </CardContent>
       </Card>
 
-      {/* Offer Card */}
+      {/* Benefits Section */}
       <Card className="border-2 border-orange-100">
         <CardHeader>
-          <CardTitle>Offer Card</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <Plus className="w-5 h-5 text-orange-600" />
+            </div>
+            Product Benefits
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Product Info */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="product-name">Product Name</Label>
-              <Input
-                id="product-name"
-                value={offerData.offer_card.product_name}
-                onChange={(e) =>
-                  handleOfferCardChange("product_name", e.target.value)
-                }
-                placeholder="Enter product name..."
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="old-price">Old Price</Label>
-              <Input
-                id="old-price"
-                value={offerData.offer_card.old_price}
-                onChange={(e) =>
-                  handleOfferCardChange("old_price", e.target.value)
-                }
-                placeholder="$42.99"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="new-price">New Price</Label>
-              <Input
-                id="new-price"
-                value={offerData.offer_card.new_price}
-                onChange={(e) =>
-                  handleOfferCardChange("new_price", e.target.value)
-                }
-                placeholder="$31.95"
-                className="mt-1"
-              />
-            </div>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between mb-3">
+            <Label>Benefits List</Label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={addBenefit}
+              className="flex items-center gap-1"
+            >
+              <Plus className="w-4 h-4" />
+              Add Benefit
+            </Button>
           </div>
-
-          {/* Features */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <Label>Product Features</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={addFeature}
-                className="flex items-center gap-1"
-              >
-                <Plus className="w-4 h-4" />
-                Add Feature
-              </Button>
-            </div>
-            <div className="space-y-2">
-              {offerData.offer_card.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <Input
-                      value={feature}
-                      onChange={(e) => updateFeature(index, e.target.value)}
-                      placeholder="Enter feature description..."
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeFeature(index)}
-                    disabled={offerData.offer_card.features.length === 1}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Button Configuration */}
-          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <Label className="text-sm font-medium text-blue-800 mb-3 block">
-              Call-to-Action Button
-            </Label>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="button-label">Button Label</Label>
-                <Input
-                  id="button-label"
-                  value={offerData.offer_card.button.label}
-                  onChange={(e) => handleButtonChange("label", e.target.value)}
-                  placeholder="Enter button label..."
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="button-popup-title">Popup Title</Label>
-                <Input
-                  id="button-popup-title"
-                  value={offerData.offer_card.button.popup_title}
-                  onChange={(e) =>
-                    handleButtonChange("popup_title", e.target.value)
-                  }
-                  placeholder="Enter popup title..."
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="button-popup-link">Popup Modal Link</Label>
-                <div className="flex items-center gap-2 mt-1">
-                  <LinkIcon className="w-4 h-4 text-gray-400" />
+          <div className="space-y-2">
+            {offerData.benefits.map((benefit, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="flex-1">
                   <Input
-                    id="button-popup-link"
-                    value={offerData.offer_card.button.popup_link}
-                    onChange={(e) =>
-                      handleButtonChange("popup_link", e.target.value)
-                    }
-                    placeholder="Enter popup modal link..."
-                    className="flex-1"
+                    value={benefit}
+                    onChange={(e) => updateBenefit(index, e.target.value)}
+                    placeholder="Enter benefit description..."
                   />
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeBenefit(index)}
+                  disabled={offerData.benefits.length === 1}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               </div>
-            </div>
-          </div>
-
-          {/* Guarantees */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <Label>Trust Guarantees</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={addGuarantee}
-                className="flex items-center gap-1"
-              >
-                <Plus className="w-4 h-4" />
-                Add Guarantee
-              </Button>
-            </div>
-            <div className="space-y-2">
-              {offerData.offer_card.guarantees.map((guarantee, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <Input
-                      value={guarantee}
-                      onChange={(e) => updateGuarantee(index, e.target.value)}
-                      placeholder="Enter guarantee text..."
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeGuarantee(index)}
-                    disabled={offerData.offer_card.guarantees.length === 1}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Preview Section */}
-      <Card>
+      {/* Trust Elements Section */}
+      <Card className="border-2 border-purple-100">
         <CardHeader>
-          <CardTitle>Section Preview</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Badge className="w-5 h-5 text-purple-600" />
+            </div>
+            Trust Elements
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between mb-3">
+            <Label>Trust Badges</Label>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={addTrustElement}
+              className="flex items-center gap-1"
+            >
+              <Plus className="w-4 h-4" />
+              Add Trust Element
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {offerData.trust_elements.map((element, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg"
+              >
+                <div className="w-32">
+                  <Label className="text-xs">Icon</Label>
+                  <select
+                    value={element.icon}
+                    onChange={(e) =>
+                      updateTrustElement(index, "icon", e.target.value)
+                    }
+                    className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  >
+                    <option value="Shield">Shield</option>
+                    <option value="Truck">Truck</option>
+                    <option value="BadgeCheck">Badge Check</option>
+                    <option value="Clock">Clock</option>
+                    <option value="Star">Star</option>
+                    <option value="Award">Award</option>
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <Label className="text-xs">Text</Label>
+                  <Input
+                    value={element.text}
+                    onChange={(e) =>
+                      updateTrustElement(index, "text", e.target.value)
+                    }
+                    placeholder="Enter trust element text..."
+                    className="mt-1"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeTrustElement(index)}
+                  disabled={offerData.trust_elements.length === 1}
+                  className="text-red-600 hover:text-red-700 mt-4"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Enhanced Preview Section */}
+      <Card className="border-2 border-indigo-100">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-indigo-100 rounded-lg">
+              <ImageIcon className="w-5 h-5 text-indigo-600" />
+            </div>
+            Live Preview
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-lg">
-            <div className="text-center mb-6">
-              <Badge variant="secondary" className="mb-4">
-                {offerData.promo_text}
-              </Badge>
-              <h3 className="text-2xl font-bold mb-2">{offerData.title}</h3>
-              <p className="text-gray-600">{offerData.subtitle}</p>
+          <div className="p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-xl">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-2 text-gray-900">
+                {offerData.title}
+              </h3>
+              <p className="text-gray-600 text-lg">{offerData.subtitle}</p>
             </div>
 
-            <div className="bg-white rounded-lg p-6 shadow-lg max-w-md mx-auto">
-              <h4 className="font-semibold mb-3">
-                {offerData.offer_card.product_name}
-              </h4>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-gray-500 line-through">
-                  {offerData.offer_card.old_price}
-                </span>
-                <span className="text-green-600 font-bold text-xl">
-                  {offerData.offer_card.new_price}
-                </span>
-              </div>
-
-              <div className="space-y-2 mb-4">
-                {offerData.offer_card.features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                    <span>{feature}</span>
+            <div className="grid lg:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
+              {/* Product Image */}
+              <div className="text-center">
+                {offerData.offer_image ? (
+                  <img
+                    src={offerData.offer_image}
+                    alt="Product"
+                    className="w-full max-w-md mx-auto rounded-xl shadow-lg"
+                  />
+                ) : (
+                  <div className="w-full max-w-md mx-auto h-64 bg-gray-200 rounded-xl flex items-center justify-center">
+                    <div className="text-center text-gray-500">
+                      <ImageIcon className="w-16 h-16 mx-auto mb-2" />
+                      <p>No image uploaded</p>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
 
-              <Button className="w-full mb-4" disabled>
-                {offerData.offer_card.button.label}
-              </Button>
+              {/* Pricing and Details */}
+              <div className="space-y-6">
+                {/* Price Display */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <div className="text-center mb-4">
+                    <div className="text-4xl font-bold text-green-600 mb-2">
+                      ${offerData.sale_price}
+                    </div>
+                  </div>
 
-              <div className="flex justify-between text-xs text-gray-500">
-                {offerData.offer_card.guarantees.map((guarantee, index) => (
-                  <span key={index}>{guarantee}</span>
-                ))}
+                  {/* Benefits */}
+                  <div className="space-y-3 mb-6">
+                    {offerData.benefits.map((benefit, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 text-sm"
+                      >
+                        <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                        <span className="text-gray-700">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <Button className="w-full py-3 text-lg mb-4" disabled>
+                    {offerData.cta_text}
+                  </Button>
+
+                  {/* Trust Elements */}
+                  <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-600">
+                    {offerData.trust_elements.map((element, index) => (
+                      <div key={index} className="flex items-center gap-1">
+                        <span className="font-medium">{element.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import {
 } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { logError } from "@/lib/error-utils";
+import { useRealTimeSync } from "./use-data-sync";
 
 interface HeroData {
   title: string;
@@ -62,16 +63,23 @@ export function HeroProvider({ children }: { children: ReactNode }) {
         if (error.code === "PGRST116" || error.code === "42P01") {
           console.info("Hero section table not found, using default data");
         } else {
-          logError("Error loading hero data:", error);
+          console.warn("Error loading hero data:", error);
         }
+        // Always ensure we have data even on error
+        setHeroData(defaultHeroData);
         return;
       }
 
       if (data && data.content) {
         setHeroData({ ...defaultHeroData, ...data.content });
+      } else {
+        // Fallback to default data if no content
+        setHeroData(defaultHeroData);
       }
     } catch (error) {
       console.info("Using default hero data due to database connection issue");
+      // Always ensure we have data even on connection failure
+      setHeroData(defaultHeroData);
     } finally {
       setIsLoading(false);
     }
@@ -81,32 +89,16 @@ export function HeroProvider({ children }: { children: ReactNode }) {
     setHeroData((prev) => ({ ...prev, ...newData }));
   };
 
+  // Real-time sync for updates from admin panel
+  useRealTimeSync("hero_section", (payload) => {
+    if (payload.new && payload.new.content) {
+      console.log("Real-time hero update received:", payload.new.content);
+      setHeroData({ ...defaultHeroData, ...payload.new.content });
+    }
+  });
+
   useEffect(() => {
     loadHeroData();
-
-    // Set up real-time subscription
-    const channel = supabase
-      .channel("hero_section_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "hero_section",
-        },
-        (payload) => {
-          console.log("Hero section updated:", payload);
-          if (payload.new && payload.new.content) {
-            setHeroData({ ...defaultHeroData, ...payload.new.content });
-          }
-        },
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   return (

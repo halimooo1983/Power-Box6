@@ -12,70 +12,69 @@ import {
   Image as ImageIcon,
   Link as LinkIcon,
 } from "lucide-react";
+import { supabase } from "@/lib/supabaseClient";
 import { logError } from "@/lib/error-utils";
 
-interface WhyChooseCard {
+interface Benefit {
   title: string;
   description: string;
-  icon: string;
+  color: string;
   image: string;
 }
 
 interface WhyChooseData {
   title: string;
-  cards: WhyChooseCard[];
-  button: {
-    label: string;
-    popup_link: string;
-  };
+  benefits: Benefit[];
 }
 
 const defaultWhyChooseData: WhyChooseData = {
   title: "Why Choose Our Nutritious Snack Box?",
-  cards: [
+  benefits: [
     {
       title: "Variety of Snacks",
       description:
         "Perfect mix of breakfast bars and savory snacks for any time of day",
-      icon: "",
-      image: "",
+      color: "blue",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F4d9abe9f679440fcb3470285697707f4?format=webp&width=800",
     },
     {
       title: "High-End Packaging",
       description:
         "Attractive and professional packaging that makes a great impression",
-      icon: "",
-      image: "",
+      color: "purple",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F6305c43f8b6449fc8926c50b002e25fe?format=webp&width=800",
     },
     {
       title: "Grab-and-Go Convenience",
       description: "Individually packaged snacks perfect for busy lifestyles",
-      icon: "",
-      image: "",
+      color: "green",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F26b950db7e9644baa7113c5a0046d0fa?format=webp&width=800",
     },
     {
       title: "Suitable for All Ages",
       description: "Perfect for adults, teens, and college students alike",
-      icon: "",
-      image: "",
+      color: "orange",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2Fa7c068e933744309b8f41ed0726156a2?format=webp&width=800",
     },
     {
       title: "Heartwarming Greeting Card",
       description: "Comes with a special greeting card to show you care",
-      icon: "",
-      image: "",
+      color: "red",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F19d8d6717d2a4dc6b633c9494573527a?format=webp&width=800",
     },
     {
       title: "42 Count Value",
       description: "Generous quantity ensuring lasting satisfaction and value",
-      icon: "",
-      image: "",
+      color: "indigo",
+      image:
+        "https://cdn.builder.io/api/v1/image/assets%2F79b7dfd5cb0f4ca0b96e836c27c6ef40%2F74bff8b15ba640b1acf1428f6b9b71b9?format=webp&width=800",
     },
   ],
-  button: {
-    label: "View Product Details",
-    popup_link: "",
-  },
 };
 
 export default function WhyChoose() {
@@ -87,40 +86,29 @@ export default function WhyChoose() {
     setWhyChooseData((prev) => ({ ...prev, title: value }));
   };
 
-  const handleCardChange = (
+  const handleBenefitChange = (
     index: number,
-    field: keyof WhyChooseCard,
+    field: keyof Benefit,
     value: string,
   ) => {
     setWhyChooseData((prev) => ({
       ...prev,
-      cards: prev.cards.map((card, i) =>
-        i === index ? { ...card, [field]: value } : card,
+      benefits: prev.benefits.map((benefit, i) =>
+        i === index ? { ...benefit, [field]: value } : benefit,
       ),
     }));
   };
 
   const handleImageUpload = (
     index: number,
-    type: "icon" | "image",
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
       // In a real implementation, you would upload to a storage service
       const imageUrl = URL.createObjectURL(file);
-      handleCardChange(index, type, imageUrl);
+      handleBenefitChange(index, "image", imageUrl);
     }
-  };
-
-  const handleButtonChange = (field: string, value: string) => {
-    setWhyChooseData((prev) => ({
-      ...prev,
-      button: {
-        ...prev.button,
-        [field]: value,
-      },
-    }));
   };
 
   const handleSave = async () => {
@@ -128,10 +116,15 @@ export default function WhyChoose() {
     try {
       console.log("Saving why choose data:", whyChooseData);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { data, error } = await supabase.from("why_choose_section").upsert({
+        id: 1,
+        content: whyChooseData,
+        updated_at: new Date().toISOString(),
+      });
 
-      localStorage.setItem("why_choose_section", JSON.stringify(whyChooseData));
+      if (error) {
+        throw error;
+      }
 
       alert("Why Choose section saved successfully!");
     } catch (error) {
@@ -144,15 +137,27 @@ export default function WhyChoose() {
 
   // Load data on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem("why_choose_section");
-    if (savedData) {
+    const loadData = async () => {
       try {
-        const parsed = JSON.parse(savedData);
-        setWhyChooseData(parsed);
+        const { data, error } = await supabase
+          .from("why_choose_section")
+          .select("*")
+          .single();
+
+        if (error && error.code !== "PGRST116") {
+          logError("Error loading data:", error);
+          return;
+        }
+
+        if (data && data.content) {
+          setWhyChooseData(data.content);
+        }
       } catch (error) {
-        logError("Error loading saved data:", error);
+        logError("Error loading data:", error);
       }
-    }
+    };
+
+    loadData();
   }, []);
 
   return (
@@ -195,99 +200,95 @@ export default function WhyChoose() {
         </CardContent>
       </Card>
 
-      {/* Cards Grid */}
+      {/* Benefits Grid */}
       <div className="grid lg:grid-cols-2 gap-6">
-        {whyChooseData.cards.map((card, index) => (
+        {whyChooseData.benefits.map((benefit, index) => (
           <Card key={index} className="border-2 border-blue-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Badge variant="secondary">Card {index + 1}</Badge>
-                {card.title || "Untitled Card"}
+                <Badge variant="secondary">Benefit {index + 1}</Badge>
+                {benefit.title || "Untitled Benefit"}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Card Title */}
+              {/* Benefit Title */}
               <div>
-                <Label htmlFor={`card-title-${index}`}>Title</Label>
+                <Label htmlFor={`benefit-title-${index}`}>Title</Label>
                 <Input
-                  id={`card-title-${index}`}
-                  value={card.title}
+                  id={`benefit-title-${index}`}
+                  value={benefit.title}
                   onChange={(e) =>
-                    handleCardChange(index, "title", e.target.value)
+                    handleBenefitChange(index, "title", e.target.value)
                   }
-                  placeholder="Enter card title..."
+                  placeholder="Enter benefit title..."
                   className="mt-1"
                 />
               </div>
 
-              {/* Card Description */}
+              {/* Benefit Description */}
               <div>
-                <Label htmlFor={`card-desc-${index}`}>Description</Label>
+                <Label htmlFor={`benefit-desc-${index}`}>Description</Label>
                 <Textarea
-                  id={`card-desc-${index}`}
-                  value={card.description}
+                  id={`benefit-desc-${index}`}
+                  value={benefit.description}
                   onChange={(e) =>
-                    handleCardChange(index, "description", e.target.value)
+                    handleBenefitChange(index, "description", e.target.value)
                   }
-                  placeholder="Enter card description..."
+                  placeholder="Enter benefit description..."
                   className="mt-1 min-h-[80px]"
                 />
               </div>
 
-              {/* Icon Upload/URL */}
+              {/* Color Selection */}
               <div>
-                <Label>Icon</Label>
-                <div className="flex gap-2 mt-1">
-                  <div className="flex-1">
-                    <Input
-                      value={card.icon}
-                      onChange={(e) =>
-                        handleCardChange(index, "icon", e.target.value)
-                      }
-                      placeholder="Icon URL or upload..."
-                    />
-                  </div>
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      document.getElementById(`icon-upload-${index}`)?.click()
-                    }
-                    className="flex items-center gap-1"
-                  >
-                    <Upload className="w-4 h-4" />
-                    Upload
-                  </Button>
+                <Label htmlFor={`benefit-color-${index}`}>Color Theme</Label>
+                <select
+                  id={`benefit-color-${index}`}
+                  value={benefit.color}
+                  onChange={(e) =>
+                    handleBenefitChange(index, "color", e.target.value)
+                  }
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md"
+                >
+                  <option value="blue">Blue</option>
+                  <option value="purple">Purple</option>
+                  <option value="green">Green</option>
+                  <option value="orange">Orange</option>
+                  <option value="red">Red</option>
+                  <option value="indigo">Indigo</option>
+                </select>
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Preview:</span>
+                  <div
+                    className={`w-4 h-4 rounded ${
+                      benefit.color === "blue"
+                        ? "bg-blue-600"
+                        : benefit.color === "purple"
+                          ? "bg-purple-600"
+                          : benefit.color === "green"
+                            ? "bg-green-600"
+                            : benefit.color === "orange"
+                              ? "bg-orange-600"
+                              : benefit.color === "red"
+                                ? "bg-red-600"
+                                : "bg-indigo-600"
+                    }`}
+                  />
                 </div>
-                <input
-                  id={`icon-upload-${index}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(index, "icon", e)}
-                  className="hidden"
-                />
-                {card.icon && (
-                  <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                    <img
-                      src={card.icon}
-                      alt="Icon preview"
-                      className="w-8 h-8 object-contain"
-                    />
-                  </div>
-                )}
               </div>
 
               {/* Image Upload/URL */}
               <div>
-                <Label>Card Image</Label>
+                <Label>Benefit Image</Label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-1">
-                  {card.image ? (
+                  {benefit.image ? (
                     <div className="space-y-2">
                       <img
-                        src={card.image}
-                        alt="Card preview"
+                        src={benefit.image}
+                        alt="Benefit preview"
                         className="max-w-full h-24 object-contain mx-auto rounded"
                       />
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 justify-center">
                         <Button
                           variant="outline"
                           size="sm"
@@ -304,7 +305,9 @@ export default function WhyChoose() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleCardChange(index, "image", "")}
+                          onClick={() =>
+                            handleBenefitChange(index, "image", "")
+                          }
                           className="text-red-600"
                         >
                           Remove
@@ -335,15 +338,15 @@ export default function WhyChoose() {
                   id={`image-upload-${index}`}
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleImageUpload(index, "image", e)}
+                  onChange={(e) => handleImageUpload(index, e)}
                   className="hidden"
                 />
 
                 <div className="mt-2">
                   <Input
-                    value={card.image}
+                    value={benefit.image}
                     onChange={(e) =>
-                      handleCardChange(index, "image", e.target.value)
+                      handleBenefitChange(index, "image", e.target.value)
                     }
                     placeholder="Or enter image URL..."
                     className="text-sm"
@@ -354,40 +357,6 @@ export default function WhyChoose() {
           </Card>
         ))}
       </div>
-
-      {/* Button Configuration */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Section Button</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="button-label">Button Label</Label>
-            <Input
-              id="button-label"
-              value={whyChooseData.button.label}
-              onChange={(e) => handleButtonChange("label", e.target.value)}
-              placeholder="Enter button label..."
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="button-popup">Popup Modal Link</Label>
-            <div className="flex items-center gap-2 mt-1">
-              <LinkIcon className="w-4 h-4 text-gray-400" />
-              <Input
-                id="button-popup"
-                value={whyChooseData.button.popup_link}
-                onChange={(e) =>
-                  handleButtonChange("popup_link", e.target.value)
-                }
-                placeholder="Enter popup modal link..."
-                className="flex-1"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

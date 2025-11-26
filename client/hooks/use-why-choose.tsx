@@ -7,6 +7,7 @@ import {
 } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { logError } from "@/lib/error-utils";
+import { useRealTimeSync } from "./use-data-sync";
 
 interface Benefit {
   title: string;

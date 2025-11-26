@@ -10,7 +10,6 @@ import {
   Facebook,
   Twitter,
   Instagram,
-  Linkedin,
   Youtube,
 } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
@@ -21,7 +20,6 @@ interface FooterData {
     facebook: string;
     twitter: string;
     instagram: string;
-    linkedin: string;
     youtube: string;
     tiktok: string;
   };
@@ -32,7 +30,6 @@ const defaultFooterData: FooterData = {
     facebook: "",
     twitter: "",
     instagram: "",
-    linkedin: "",
     youtube: "",
     tiktok: "",
   },
@@ -59,13 +56,6 @@ const socialPlatforms = [
     icon: Instagram,
     color: "text-pink-600",
     placeholder: "https://instagram.com/yourhandle",
-  },
-  {
-    key: "linkedin",
-    label: "LinkedIn",
-    icon: Linkedin,
-    color: "text-blue-700",
-    placeholder: "https://linkedin.com/company/yourcompany",
   },
   {
     key: "youtube",
